@@ -1,8 +1,9 @@
 const userSchema = require("../Schemas/User");
 const validator = require("validator");
 const bcrypt = require("bcrypt");
+const ObjectId = require("mongodb").ObjectId  // this is for cheking the userId is of datatype of ObjectId.
 
-let User = class {
+const User = class {
     username;
     name;
     email;
@@ -91,6 +92,26 @@ let User = class {
             }
             return resolve(userDb);
         })
+    }
+
+    static verifyUserId({ userId }){
+        return new Promise(async (resolve, reject)=>{             
+            try{
+                if(!ObjectId.isValid(userId)){
+                    reject("Invalid userId");
+                }
+                const userDb = await userSchema.findOne({_id: ObjectId(userId)});
+                if(!userDb){
+                    reject("No user Found");
+                }
+                // console.log("Hi",userDb);
+                resolve(userDb);
+            }
+            catch(err){
+                reject(err);
+            }
+        })
+        
     }
 }
 

@@ -9,7 +9,8 @@ const mongoDBSession = require("connect-mongodb-session")(session);
 
 // file import
 const db = require("./db")
-const AuthRouter = require("./Controllers/Auth")
+const AuthRouter = require("./Controllers/Auth");
+const BlogRouter = require("./Controllers/Blog");
 
 //database Connection.
 
@@ -39,6 +40,7 @@ app.use("/", AuthRouter);
 
 // Routing
 app.use("/auth", AuthRouter);
+app.use("/blog", BlogRouter);
 
 app.listen(PORT, ()=>{
     console.log(clc.underline(`App is running at`))
