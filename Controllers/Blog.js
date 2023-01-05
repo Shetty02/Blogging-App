@@ -52,4 +52,41 @@ BlogRouter.post("/create-blog", (req, res)=>{
     })
 })
 
+BlogRouter.get("/get-blogs", async(req, res)=>{
+    const offset = req.query.offset || 0;
+    try {
+       const blogs = await Blog.getBlogs({ offset })
+
+       return res.send({
+        status: 200,
+        message:"Read Successfully",
+        data: blogs
+       })
+    } catch (err) {
+        return res.send({
+            status:400,
+            message:"Read Unsuccessfully",
+            error: err
+        })        
+    }
+})
+BlogRouter.get("/my-blogs", async(req, res)=>{
+    const userId = req.session.user.userId;
+    const offset = req.query.offset || 0;
+    try {
+       const blogs = await Blog.myBlogs({ offset, userId})
+       return res.send({
+        status: 200,
+        message:"Read Successfully",
+        data: blogs
+       })
+    } catch (err) {
+        return res.send({
+            status:400,
+            message:"Read Unsuccessfully",
+            error: err
+        })        
+    }
+})
+
 module.exports = BlogRouter

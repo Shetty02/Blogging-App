@@ -1,4 +1,6 @@
 const blogSchema = require("../Schemas/Blog");
+const constants = require("../constants");
+const ObjectId = require("mongodb").ObjectId;
 
 const Blog = class{
     title;
@@ -36,6 +38,47 @@ const Blog = class{
         })
     }
 
+    static getBlogs({offset}){
+        return new Promise(async (resolve, reject)=>{
+            try {
+                const blogDb = await blogSchema.aggregate([
+                    {$sort: {createDatetime : -1}}, // -1 for decreasing order.
+                    { $facet : {
+                        data : [
+                            { $skip : parseInt(offset)},
+                            { $limit : constants.BLOGSLIMIT},
+                        ],
+                    }},
+                ]);
+                            resolve(blogDb[0].data)
+            } catch (error) {
+                reject(error);
+            }
+        
+
+        })
+    }
+    static myBlogs({offset, userId}){
+        return new Promise(async (resolve, reject)=>{
+            try {
+                const blogDb = await blogSchema.aggregate([
+                    { $match: {userId : ObjectId(userId)}},
+                    {$sort: {createDatetime : -1}}, // -1 for decreasing order.
+                    { $facet : {
+                        data : [
+                            { $skip : parseInt(offset)},
+                            { $limit : constants.BLOGSLIMIT},
+                        ],
+                    }},
+                ]);
+                            resolve(blogDb[0].data)
+            } catch (error) {
+                reject(error);
+            }
+        
+
+        })
+    }
 }
 
 module.exports = Blog

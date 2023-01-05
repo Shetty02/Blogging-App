@@ -11,6 +11,7 @@ const mongoDBSession = require("connect-mongodb-session")(session);
 const db = require("./db")
 const AuthRouter = require("./Controllers/Auth");
 const BlogRouter = require("./Controllers/Blog");
+const isAuth = require("./Middlewares/isAuth");
 
 //database Connection.
 
@@ -40,7 +41,7 @@ app.use("/", AuthRouter);
 
 // Routing
 app.use("/auth", AuthRouter);
-app.use("/blog", BlogRouter);
+app.use("/blog", isAuth, BlogRouter);
 
 app.listen(PORT, ()=>{
     console.log(clc.underline(`App is running at`))
