@@ -32,9 +32,10 @@ app.use(
     })
 )
 //Routes
-app.get('/',(req, res)=>{
-    res.send("Welcome to blog app")
-})
+// app.get('/',(req, res)=>{
+//     res.send("Welcome to blog app")
+// })
+app.use("/", AuthRouter);
 
 // Routing
 app.use("/auth", AuthRouter);
