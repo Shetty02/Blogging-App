@@ -3,6 +3,7 @@ const AuthRouter = express.Router();
 const cleanUpAndValidate = require("../Utils/AuthUtils");
 const validator = require("validator")
 const User = require("../Models/User");
+const isAuth = require("../Middlewares/isAuth")
 
 // Home Page
 AuthRouter.get("/",(req, res)=>{
@@ -104,7 +105,7 @@ AuthRouter.post("/login",async (req, res)=>{
     }
 })
 
-AuthRouter.post("/logout", (req,res)=>{
+AuthRouter.post("/logout",isAuth , (req,res)=>{
     const userData = req.session.user;
     req.session.destroy((err)=>{
         if(err){

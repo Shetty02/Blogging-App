@@ -12,6 +12,7 @@ const db = require("./db")
 const AuthRouter = require("./Controllers/Auth");
 const BlogRouter = require("./Controllers/Blog");
 const isAuth = require("./Middlewares/isAuth");
+const FollowRouter = require("./Controllers/Follow");
 
 //database Connection.
 
@@ -41,7 +42,10 @@ app.use("/", AuthRouter);
 
 // Routing
 app.use("/auth", AuthRouter);
+// Blogging Routes
 app.use("/blog", isAuth, BlogRouter);
+// Follow Routes
+app.use("/follow", isAuth, FollowRouter)
 
 app.listen(PORT, ()=>{
     console.log(clc.underline(`App is running at`))

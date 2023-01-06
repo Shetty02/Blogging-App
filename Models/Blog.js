@@ -7,12 +7,14 @@ const Blog = class{
     textBody;
     userId;
     createDatetime;
+    blogId;
 
-    constructor({title, textBody, userId, createDatetime}){
+    constructor({title, textBody, userId, createDatetime, blogId}){
         this.title = title;
         this.textBody = textBody;
         this.userId = userId;
         this.createDatetime = createDatetime;
+        this.blogId = blogId;
     }
 
     createBlog(){
@@ -77,6 +79,48 @@ const Blog = class{
             }
         
 
+        })
+    }
+    getDataofBlogfromId(){
+        return new Promise(async (resolve, reject)=>{
+            try {
+                const blog = await blogSchema.findOne({ _id: ObjectId(this.blogId)})
+                resolve(blog)
+            } catch (err) {
+                reject(err);
+            }
+        })
+    }
+
+    updateBlog(){
+        return new Promise(async (resolve, reject)=>{
+            try {
+               let newBlogdata = {};
+
+               if(this.title){
+                newBlogdata.title = this.title
+               }
+
+               if(this.textBody){
+                newBlogdata.textBody = this.textBody
+               }
+
+                const oldData = await blogSchema.findOneAndUpdate({ _id: ObjectId(this.blogId)}, newBlogdata)
+               return resolve(oldData)
+            } catch (err) {
+                reject(err);
+            }
+        }) 
+    }
+
+    deleteBlog(){
+        return new Promise(async (resolve, reject)=>{
+            try {
+                const blog = await blogSchema.findOneAndDelete({ _id: ObjectId(this.blogId)})
+                resolve(blog)
+            } catch (err) {
+                reject(err);
+            }
         })
     }
 }
