@@ -40,10 +40,12 @@ const Blog = class{
         })
     }
 
-    static getBlogs({offset}){
+    static getBlogs({offset, userIds}){
         return new Promise(async (resolve, reject)=>{
             try {
                 const blogDb = await blogSchema.aggregate([
+                    { $match: { userId: {$in: userIds}, deleted: {$ne: true}}},
+                    // { $match: { userId: {$in: userIds}}},
                     {$sort: {createDatetime : -1}}, // -1 for decreasing order.
                     { $facet : {
                         data : [
@@ -64,7 +66,8 @@ const Blog = class{
         return new Promise(async (resolve, reject)=>{
             try {
                 const blogDb = await blogSchema.aggregate([
-                    { $match: {userId : ObjectId(userId)}},
+                    { $match: {userId : ObjectId(userId),  deleted: {$ne: true}}},
+                    // { $match: {userId : ObjectId(userId)}},
                     {$sort: {createDatetime : -1}}, // -1 for decreasing order.
                     { $facet : {
                         data : [
@@ -116,8 +119,14 @@ const Blog = class{
     deleteBlog(){
         return new Promise(async (resolve, reject)=>{
             try {
-                const blog = await blogSchema.findOneAndDelete({ _id: ObjectId(this.blogId)})
-                resolve(blog)
+                // const blog = await blogSchema.findOneAndDelete({ _id: ObjectId(this.blogId)})
+                // resolve(blog)
+                const blogDb = await blogSchema.findByIdAndUpdate(
+                    {_id: ObjectId(this.blogId)},
+                    {deleted: true, deletionDatetime: new Date()}
+                    )
+                    console.log(blogDb)
+                    resolve(blogDb)
             } catch (err) {
                 reject(err);
             }

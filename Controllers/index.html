@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <button id="text">Click me</button>
+    <button id="demo" ondblclick="hideBtn()">Click me</button>
+    <script>
+        let btn = document.getElementById("text");
+        btn.addEventListener("click",()=>{
+            btn.style.color = "red";
+            btn.style.backgroundColor = "Yellow"
+        })
+        // let hideBtn = document.getElementById("demo");
+        // let counter = 0;
+        // hideBtn.addEventListener("click",()=>{
+        //     counter++;
+        //     if(counter === 2){
+        //         hideBtn.style.display = "none";
+        //     }
+        // })
+     function hideBtn(){
+        document.getElementById("demo").style.display = "none";
+        }
+
+        let obj = { id: "123", name: "candidate", age: "22", work: "SDE" };
+        // print keys of the object in one array.
+        console.log(Object.keys(obj));
+    </script>
+</body>
+</html>

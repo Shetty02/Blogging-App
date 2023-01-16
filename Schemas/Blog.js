@@ -17,6 +17,14 @@ const blogSchema = new Schema({
     userId: {
         type: Schema.Types.ObjectId,
         required: true
+    },
+    deleted:{
+        type: Boolean,
+        required: false
+    },
+    deletionDatetime:{
+        type:String,
+        required: false
     }
 
 })

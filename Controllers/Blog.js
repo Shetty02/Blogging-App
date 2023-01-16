@@ -3,6 +3,7 @@ const BlogRouter = express.Router();
 const blogValidation = require("../Utils/BlogUtils");   
 const User = require("../Models/User");
 const Blog = require("../Models/Blog");
+const { followingUserList } = require("../Models/Follow");
 
 BlogRouter.post("/create-blog", (req, res)=>{
     const title = req.body.title;
@@ -54,8 +55,18 @@ BlogRouter.post("/create-blog", (req, res)=>{
 
 BlogRouter.get("/get-blogs", async(req, res)=>{
     const offset = req.query.offset || 0;
+    const userId = req.session.user.userId;
+
     try {
-       const blogs = await Blog.getBlogs({ offset })
+     const followingUser = await followingUserList({ followerUserId : userId, offset})
+     console.log(followingUser);
+     const userIds= [];
+     followingUser.forEach((user)=>{
+        userIds.push(user._id);
+     });
+
+     console.log(userIds)
+       const blogs = await Blog.getBlogs({ offset, userIds })
 
        return res.send({
         status: 200,
@@ -176,7 +187,7 @@ BlogRouter.post("/delete-blog", async(req, res)=>{
         // Here we are getting the blodId.
         const blog = new Blog({ blogId})
         const blogDb = await blog.getDataofBlogfromId();
-        console.log(blogDb);
+        // console.log(blogDb);
 
         // Here we are Checking the blogs owner with user present in the session.
         if(!blogDb.userId.equals(userId) ){
@@ -189,7 +200,7 @@ BlogRouter.post("/delete-blog", async(req, res)=>{
 
         const blogData = await blog.deleteBlog();
         return res.send({
-            status: 400,
+            status: 201,
             message:"Deletion Successfull.",
             data: blogData
         })
